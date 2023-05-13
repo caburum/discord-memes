@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>memz</title>
+		<style>
+			body {
+				font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+				display: flex;
+				flex-direction: column;
+				gap: 1em;
+				align-items: center;
+				justify-content: center;
+				height: 100vh;
+				width: 100vw;
+				margin: 0;
+			}
+			img {
+				max-width: 95%;
+				max-height: 95%;
+			}
+			@media (prefers-color-scheme: dark) {
+				body {
+					background-color: #2b2d31;
+					color: #dbdee1;
+				}
+			}
+			p#num {
+				position: fixed;
+				bottom: 1em;
+				right: 1em;
+				margin: 0;
+				opacity: 0.05;
+			}
+		</style>
+	</head>
+	<body>
+		<p id="num"></p>
+	</body>
+	<script>
+		/** @type {{content: string, attachments: string[]}[]} */
+		const plates = /* REPLACEME */ []; // build will add plates here
+
+		if (!plates.length) throw new Error('no plates found');
+
+		const plate = plates[Math.floor(Math.random() * plates.length)];
+
+		if (plate.content) document.body.appendChild(document.createTextNode(plate.content));
+		plate.attachments.forEach((attachment) => {
+			const img = document.createElement('img');
+			img.src = attachment;
+			document.body.appendChild(img);
+		});
+
+		const num = localStorage.getItem('num');
+
+		if (num == null) localStorage.setItem('num', 1);
+		else localStorage.setItem('num', parseInt(num) + 1);
+
+		document.getElementById('num').innerHTML = localStorage.getItem('num');
+	</script>
+</html>

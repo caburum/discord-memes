@@ -1,0 +1,14 @@
+{
+	"name": "discord-memes",
+	"version": "1.0.0",
+	"description": "",
+	"type": "module",
+	"scripts": {
+		"build": "node index.js"
+	},
+	"author": "Calum Dingwall (https://github.com/caburum)",
+	"license": "MIT",
+	"dependencies": {
+		"discord.js": "^14.11.0"
+	}
+}

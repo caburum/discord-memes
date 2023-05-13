@@ -4,7 +4,8 @@
 	"description": "",
 	"type": "module",
 	"scripts": {
-		"build": "node index.js"
+		"build": "node index.js",
+		"build-cached": "node index.js --cached"
 	},
 	"author": "Calum Dingwall (https://github.com/caburum)",
 	"license": "MIT",

@@ -16,35 +16,56 @@
 				width: 100vw;
 				margin: 0;
 			}
-			img {
-				max-width: 95%;
-				max-height: 95%;
-			}
 			@media (prefers-color-scheme: dark) {
 				body {
 					background-color: #2b2d31;
 					color: #dbdee1;
 				}
 			}
-			p#num {
+			img {
+				max-width: 95%;
+				max-height: 95%;
+			}
+			#num {
 				position: fixed;
 				bottom: 1em;
 				right: 1em;
 				margin: 0;
 				opacity: 0.05;
+				text-decoration: none;
+				color: inherit;
 			}
 		</style>
 	</head>
 	<body>
-		<p id="num"></p>
+		<a id="num"></a>
 	</body>
 	<script>
-		/** @type {{content: string, attachments: string[]}[]} */
+		/** @type {{id: string, content: string, attachments: string[]}[]} */
 		const plates = /* REPLACEME */ []; // build will add plates here
 
 		if (!plates.length) throw new Error('no plates found');
 
-		const plate = plates[Math.floor(Math.random() * plates.length)];
+		let usedPlates;
+		try {
+			usedPlates = JSON.parse(localStorage.getItem('usedPlates'));
+		} catch {}
+		if (!Array.isArray(usedPlates) || usedPlates.length >= plates.length) usedPlates = [];
+
+		const unusedPlates = plates.filter((plate) => !usedPlates.includes(plate.id));
+		// just in case something goes really wrong
+		if (unusedPlates.length === 0) {
+			localStorage.removeItem('usedPlates');
+			location.reload();
+		}
+
+		let specialPlate;
+		if (location.hash) {
+			const hash = location.hash.slice(1);
+			specialPlate = plates.find((plate) => plate.id === hash);
+		}
+
+		const plate = specialPlate || unusedPlates[Math.floor(Math.random() * unusedPlates.length)];
 
 		if (plate.content) document.body.appendChild(document.createTextNode(plate.content));
 		plate.attachments.forEach((attachment) => {
@@ -53,11 +74,16 @@
 			document.body.appendChild(img);
 		});
 
-		const num = localStorage.getItem('num');
+		if (!specialPlate) usedPlates.push(plate.id);
+		localStorage.setItem('usedPlates', JSON.stringify(usedPlates));
 
+		const num = localStorage.getItem('num');
 		if (num == null) localStorage.setItem('num', 1);
 		else localStorage.setItem('num', parseInt(num) + 1);
-
 		document.getElementById('num').innerHTML = localStorage.getItem('num');
+
+		const url = new URL(location);
+		url.hash = plate.id;
+		document.getElementById('num').href = url.toString();
 	</script>
 </html>

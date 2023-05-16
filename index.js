@@ -2,9 +2,13 @@ import { Client, Events, GatewayIntentBits } from 'discord.js';
 import { cp, readFile, writeFile } from 'fs/promises';
 import { createRequire } from 'module';
 
-const filterAttachment = (attachment) => attachment.contentType && attachment.contentType.startsWith('image/');
-const filterMessage = (message) => message.attachments.size > 0 && message.attachments.every(filterAttachment);
+/** @param {import('discord.js').Attachment} attachment */
+const filterAttachment = (attachment) => attachment?.contentType?.startsWith('image/') || attachment.url.match(/\.(png|jpe?g|gif|webp)$/i); // old messages don't have contentType
 
+/** @param {import('discord.js').Message} message */
+const filterMessage = (message) => message.attachments.size > 0 && message.attachments.some(filterAttachment) && !(message.reactions.cache.get('❌')?.count > 0);
+
+/** @param {import('discord.js').Message} message */
 const messageToData = (message) => {
 	return { id: BigInt(message.id).toString(36), content: message.content, attachments: message.attachments.filter(filterAttachment).map((attachment) => attachment.url) };
 };

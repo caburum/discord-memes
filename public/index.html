@@ -20,9 +20,11 @@
 			#main {
 				display: flex;
 				flex-direction: column;
+				flex-wrap: wrap;
 				gap: 0.75em;
 				align-items: center;
 				justify-content: center;
+				align-content: center;
 				text-align: center;
 				height: calc(100vh - 1em);
 				width: calc(100vw - 1em);
@@ -31,6 +33,7 @@
 			img {
 				max-width: 90%;
 				max-height: 90%;
+				overflow: visible;
 			}
 			#num {
 				position: fixed;
